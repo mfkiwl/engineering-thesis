@@ -1,0 +1,31 @@
+#### ISE Design Suite
+master_fifo/**
+!master_fifo/master_fifo.xise
+
+!master_fifo/src/
+master_fifo/src/**
+
+!master_fifo/src/rtl/
+master_fifo/src/rtl/**
+!master_fifo/src/rtl/*.v
+
+!master_fifo/src/constraints/
+master_fifo/src/constraints/**
+!master_fifo/src/constraints/*.ucf
+
+!master_fifo/src/ip_core/
+master_fifo/src/ip_core/**
+!master_fifo/src/ip_core/*.v
+!master_fifo/src/ip_core/*.ngc
+!master_fifo/src/ip_core/*.xco
+
+!master_fifo/src/sim/
+master_fifo/src/sim/**
+!master_fifo/src/sim/*.v
+
+
+#### Visual Studio
+api/.vs/
+api/x64/
+api/ft601/x64/
+
