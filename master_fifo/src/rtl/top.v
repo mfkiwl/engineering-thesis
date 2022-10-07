@@ -15,13 +15,17 @@ module top (
 	wire rst;
 	assign rst = (HRST_N & SRST_N);
 	
-	// data_generator unit
+	// data_generator
 	wire [31:0] ge_data;
 	wire ge_valid;
+	
+	// data_gateway
+	wire fifo_full;
 	
 	data_generator u_data_generator(
 		.clk(CLK_FPGA),
 		.rst(rst),
+		.gen(!fifo_full),
 		.ge_data(ge_data),
 		.ge_valid(ge_valid)
 	);
@@ -35,7 +39,8 @@ module top (
 		.ftdi_txe_n(TXE_N),
 		.ftdi_data(DATA),
 		.ftdi_be(BE),
-		.ftdi_wr_n(WR_N)
+		.ftdi_wr_n(WR_N),
+		.fifo_full(fifo_full)
 	);
 	
 	assign RD_N = 1'b1;

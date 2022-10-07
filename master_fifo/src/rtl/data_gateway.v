@@ -9,7 +9,8 @@ module data_gateway (
 	//Out
 	output 	wire [31:0] ftdi_data,
 	output	wire [3:0]	ftdi_be,
-	output	wire			ftdi_wr_n
+	output	wire			ftdi_wr_n,
+	output wire fifo_full
 	);
 	
 	localparam	PACKET_SIZE 	= 	1024;
@@ -29,7 +30,7 @@ module data_gateway (
 		else
 			if((~fifo_empty_thresh) &  (fifo_data_ctr == PACKET_SIZE) & (~ftdi_txe_n))
 				fifo_data_ctr <= 0;
-			else if(fifo_data_ctr != PACKET_SIZE)
+			else if((fifo_data_ctr != PACKET_SIZE) && (!ftdi_txe_n))
 				fifo_data_ctr <= fifo_data_ctr + 1'b1;
 				
 	always @(posedge ftdi_clk) fifo_read <= (fifo_data_ctr != PACKET_SIZE);
@@ -42,7 +43,7 @@ module data_gateway (
 		.wr_en(data_in_valid), 
 		.rd_en(fifo_read), 
 		.dout(ftdi_data), 
-		.full(), 
+		.full(fifo_full), 
 		.empty(fifo_empty), 
 		.valid(fifo_valid),
 		.prog_empty(fifo_empty_thresh) 

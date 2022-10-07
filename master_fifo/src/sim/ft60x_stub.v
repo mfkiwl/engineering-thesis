@@ -7,8 +7,8 @@ module ft60x_stub (
 	output 	wire 		TXE_N
 	);
 	
-	localparam 	FTDI_FIFO_SIZE 			= 	4096,
-					FTDI_USB_READ_CYCLES 	= 	1000;	
+	localparam 	FTDI_FIFO_SIZE 			= 	4096, // Bytes
+					FTDI_USB_READ_CYCLES 	= 	1024;	// Cycles
 	
 	reg [12:0] data_ctr, read_cycles_ctr;
 	
@@ -19,7 +19,7 @@ module ft60x_stub (
 		end
 		else begin
 			if((!WR_N) && (data_ctr != FTDI_FIFO_SIZE))
-				data_ctr <= data_ctr + 1;
+				data_ctr <= data_ctr + 4;
 				
 			else if((data_ctr == FTDI_FIFO_SIZE) && (read_cycles_ctr != FTDI_USB_READ_CYCLES))
 				read_cycles_ctr <= read_cycles_ctr + 1;
