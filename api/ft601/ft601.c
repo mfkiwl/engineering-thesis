@@ -20,33 +20,38 @@ int main() {
         return FALSE;
     }
 
-    ftStatus = FT_ReadPipe(ftHandle, 0x82, acReadBuf, sizeof(acReadBuf), &ulBytesRead, NULL);
-    if (FT_FAILED(ftStatus)) {
-        printf("\nFAILED");
-        FT_Close(ftHandle);
-        return FALSE;
-    }
-
     UINT32 failCtr = 0;
-    UINT32 uiDecValue;
-    for (int i = 0; i < ulBytesRead; i++) {
-        if ((i > 0) && ((i % 4) == 0)) //test
-            if (acReadBuf[i] != ((acReadBuf[i - 4] + 1) & 0xff)) {
-                //printf("%02x %02x", acReadBuf[i], (acReadBuf[i - 4] + 1) & 0xff);
-                //break;
-                printf("<---------------------------FAILEEEEEEEEEEEEEEEED\n");
-                failCtr++;
-            }//end_of_test
-        if ((i + 1) % 4 == 0) {
-            uiDecValue = ((acReadBuf[i] << 24) | (acReadBuf[i - 1] << 16) | (acReadBuf[i - 2] << 8) | (acReadBuf[i - 3] << 0));
-            printf("%d\n", uiDecValue);
+    int loopctr = 0;
+    while (loopctr < 1) {
+        loopctr++;
+        ftStatus = FT_ReadPipe(ftHandle, 0x82, acReadBuf, sizeof(acReadBuf), &ulBytesRead, NULL);
+        if (FT_FAILED(ftStatus)) {
+            printf("\nFAILED");
+            FT_Close(ftHandle);
+            return FALSE;
         }
-        else
-            continue;
+
+        //UINT32 failCtr = 0;
+        UINT32 uiDecValue;
+        for (int i = 0; i < ulBytesRead; i++) {
+            if ((i > 0) && ((i % 4) == 0)) //test
+                if (acReadBuf[i] != ((acReadBuf[i - 4] + 1) & 0xff)) {
+                    //printf("%02x %02x", acReadBuf[i], (acReadBuf[i - 4] + 1) & 0xff);
+                    //break;
+                    printf("%d. <---------------------------FAILEEEEEEEEEEEEEEEED\n", failCtr + 1);
+                    failCtr++;
+                }//end_of_test
+            if ((i + 1) % 4 == 0) {
+                uiDecValue = ((acReadBuf[i] << 24) | (acReadBuf[i - 1] << 16) | (acReadBuf[i - 2] << 8) | (acReadBuf[i - 3] << 0));
+                printf("%d\n", uiDecValue);
+            }
+            else
+                continue;
+        }
     }
 
     printf("\n\nfails = %d\n", failCtr);
-    printf("%d Bytes received\n\n", ulBytesRead);
+    printf("%d Bytes received\n\n", loopctr * ulBytesRead);
 
     FT_Close(ftHandle);
     return TRUE;

@@ -8,7 +8,10 @@ module top (
 	inout 	wire [3:0] 	BE,
 	output 	wire 			WR_N,
 	output	wire			RD_N,
-	output	wire			OE_N
+	output	wire			OE_N,
+	output wire led0,
+	output wire led1,
+	output wire led2
 	);
 
 	// reset
@@ -40,7 +43,10 @@ module top (
 		.ftdi_data(DATA),
 		.ftdi_be(BE),
 		.ftdi_wr_n(WR_N),
-		.fifo_full(fifo_full)
+		.fifo_full(fifo_full),
+		.ctr_flag_failure(led0),
+		.fifo_full_failure(led1),
+		.fifo_empty_failure(led2)
 	);
 	
 	assign RD_N = 1'b1;

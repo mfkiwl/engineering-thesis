@@ -10,8 +10,31 @@ module data_gateway (
 	output 	wire [31:0] ftdi_data,
 	output	wire [3:0]	ftdi_be,
 	output	wire			ftdi_wr_n,
-	output wire fifo_full
+	output wire fifo_full,
+	output wire   ctr_flag_failure,
+	output wire   fifo_full_failure,
+	output wire   fifo_empty_failure
 	);
+	
+	reg fifo_full_failure_r, fifo_empty_failure_r, ctr_flag_failure_r;
+	assign fifo_full_failure = fifo_full_failure_r;
+	assign fifo_empty_failure = fifo_empty_failure_r;
+	assign ctr_flag_failure = ctr_flag_failure_r;
+	
+	always @(posedge ftdi_clk)
+		if(rst) begin
+			fifo_full_failure_r <= 0;
+			fifo_empty_failure_r <= 0;
+			ctr_flag_failure_r <= 0;
+		end
+		else begin
+			if(fifo_full)
+				fifo_full_failure_r <= 1;
+			if(fifo_empty)
+				fifo_empty_failure_r <= 1;
+			if((fifo_data_ctr == fifo_data_ctr) && (fifo_data_ctr_prev != PACKET_SIZE))
+				ctr_flag_failure_r <= 1;
+		end
 	
 	localparam	PACKET_SIZE 	= 	1024;
 	
@@ -19,10 +42,13 @@ module data_gateway (
 	wire fifo_empty, fifo_empty_thresh;
 	
 	reg fifo_read;
-	reg [10:0] fifo_data_ctr;
+	reg [10:0] fifo_data_ctr, fifo_data_ctr_prev;
 	
 	assign ftdi_be 	= 	4'b1111;
 	assign ftdi_wr_n	=	~fifo_valid;
+	
+	always @(posedge ftdi_clk)
+		fifo_data_ctr_prev <= fifo_data_ctr;
 	
 	always @(posedge ftdi_clk)
 		if(fifo_empty)
@@ -30,7 +56,7 @@ module data_gateway (
 		else
 			if((~fifo_empty_thresh) &  (fifo_data_ctr == PACKET_SIZE) & (~ftdi_txe_n))
 				fifo_data_ctr <= 0;
-			else if((fifo_data_ctr != PACKET_SIZE) && (!ftdi_txe_n))
+			else if((fifo_data_ctr != PACKET_SIZE))
 				fifo_data_ctr <= fifo_data_ctr + 1'b1;
 				
 	always @(posedge ftdi_clk) fifo_read <= (fifo_data_ctr != PACKET_SIZE);
