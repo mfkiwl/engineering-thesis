@@ -1,26 +1,32 @@
 module data_generator (
-	// In
-	input 	wire 				clk,
-	input 	wire 				rst,
-	// Out
-	output 	wire [31:0]		ge_data,
-	output 	wire 				ge_valid
-	);
+	// Input
+	input  wire 				clk_in,
+	input  wire 				rst_in,
+	input	 wire					trigger_in,
+	// Output
+	output wire [31:0]		data_out,
+	output wire 				valid_out
+	);	
 	
-	reg [31:0] ge_data_reg;
-	reg ge_valid_reg;
+	reg [31:0] data;
+	reg valid;
 	
-	assign ge_data = ge_data_reg;
-	assign ge_valid = ge_valid_reg;
+	assign data_out = data;
+	assign valid_out = valid;
 		
-	always @(posedge clk)
-		if(rst) begin
-			ge_data_reg <= 32'hffffffff;
-			ge_valid_reg<= 1'b0;
+	always @(posedge clk_in)
+		if(rst_in) begin
+			data <= 32'hffffffff;
+			valid <= 1'b0;
 		end
-		else begin
-				ge_data_reg <= (ge_data_reg != 32'hffffffff)? ge_data_reg + 1'b1: 0;
-				ge_valid_reg <= 1'b1;
+		else
+			if(trigger_in) begin
+				data <= (data != 32'hffffffff)? data + 1'b1: 0;
+				valid <= 1'b1;
 			end
-	
+			else begin
+				data <= data;
+				valid <= 1'b0;
+			end
+			
 endmodule

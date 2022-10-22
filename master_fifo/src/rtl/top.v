@@ -1,9 +1,11 @@
 module top (
-	input 	wire 			CLK_FPGA, //27MHz
+	// Input
+	input 	wire 			CLK_USER, //27MHz
 	input 	wire 			CLK_FTDI, //100MHz
 	input 	wire 			HRST_N,
 	input 	wire 			SRST_N,
 	input 	wire 			TXE_N,
+	// Output
 	inout 	wire [31:0] DATA,
 	inout 	wire [3:0] 	BE,
 	output 	wire 			WR_N,
@@ -15,27 +17,32 @@ module top (
 	wire rst;
 	assign rst = (HRST_N & SRST_N);
 	
-	// data_generator unit
-	wire [31:0] ge_data;
-	wire ge_valid;
+	// data_generator
+	wire [31:0] gen_data;
+	wire gen_valid;
+	
+	// data_gateway
+	wire gate_trigger;
 	
 	data_generator u_data_generator(
-		.clk(CLK_FPGA),
-		.rst(rst),
-		.ge_data(ge_data),
-		.ge_valid(ge_valid)
+		.clk_in(CLK_USER),
+		.rst_in(rst),
+		.trigger_in(gate_trigger),
+		.data_out(gen_data),
+		.valid_out(gen_valid)
 	);
 	
 	data_gateway u_data_gateway(
-		.rst(rst),
-		.data_in_clk(CLK_FPGA),
-		.data_in(ge_data),
-		.data_in_valid(ge_valid),
-		.ftdi_clk(CLK_FTDI),
-		.ftdi_txe_n(TXE_N),
-		.ftdi_data(DATA),
-		.ftdi_be(BE),
-		.ftdi_wr_n(WR_N)
+		.rst_in(rst),
+		.wr_clk_in(CLK_USER),
+		.data_in(gen_data),
+		.valid_in(gen_valid),
+		.rd_clk_in(CLK_FTDI),
+		.txe_n_in(TXE_N),
+		.data_out(DATA),
+		.be_out(BE),
+		.wr_n_out(WR_N),
+		.trigger_out(gate_trigger)
 	);
 	
 	assign RD_N = 1'b1;
