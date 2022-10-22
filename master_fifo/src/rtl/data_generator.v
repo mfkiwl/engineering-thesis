@@ -13,7 +13,7 @@ module data_generator (
 	reg [31:0] data;
 	reg valid;
 	reg trigger_prev, trigger_tick;
-	reg [15:0] data_ctr;
+	reg [31:0] data_ctr;
 	
 	assign data_out = data;
 	assign valid_out = valid;

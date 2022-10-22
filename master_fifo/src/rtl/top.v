@@ -22,9 +22,6 @@ module top (
 	wire [31:0] gen_data;
 	wire gen_valid;
 	
-	// data_gateway
-	wire gate_trigger;
-	
 	data_generator u_data_generator(
 		.clk_in(CLK_USER),
 		.rst_in(rst),
