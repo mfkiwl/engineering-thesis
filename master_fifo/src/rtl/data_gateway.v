@@ -9,14 +9,13 @@ module data_gateway (
 	// Output
 	output wire [31:0]	data_out,
 	output wire [3:0]		be_out,
-	output wire				wr_n_out,
-	output wire				trigger_out
+	output wire				wr_n_out
 	);
 	
 	localparam PACKET_SIZE = 1024;
 	
 	// fifo
-	wire fifo_empty, fifo_valid, fifo_prog_full, fifo_prog_empty;
+	wire fifo_empty, fifo_valid, fifo_prog_empty;
 	
 	reg fifo_read;
 	reg [1:0] fifo_reset_ctr;
@@ -24,7 +23,6 @@ module data_gateway (
 
 	assign be_out = 4'hf;
 	assign wr_n_out = !fifo_valid;
-	assign trigger_out = !fifo_prog_full;
 	
 	always @(posedge rd_clk_in)
 		if(rst_in || fifo_empty) begin
@@ -55,7 +53,6 @@ module data_gateway (
 		.full(), 
 		.empty(fifo_empty), 
 		.valid(fifo_valid),
-		.prog_full(fifo_prog_full),
 		.prog_empty(fifo_prog_empty) 
 	);
 

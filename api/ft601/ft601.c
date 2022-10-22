@@ -23,13 +23,14 @@ int main() {
     UINT32 failCtr = 0;
     int loopctr = 0;
     UINT32 uiDecValue = 0, uiDecValuePREV = 0;
+    ULONG ulBytesReadBuffer = 0;
     while (loopctr <  500) {
         loopctr++;
+        ulBytesReadBuffer = ulBytesRead;
         ftStatus = FT_ReadPipe(ftHandle, 0x82, acReadBuf, sizeof(acReadBuf), &ulBytesRead, NULL);
         if (FT_FAILED(ftStatus)) {
-            printf("\nFAILED");
-            FT_Close(ftHandle);
-            return FALSE;
+            ulBytesRead = ulBytesReadBuffer;
+            break;
         }
 
         for (int i = 0; i < ulBytesRead; i++) {

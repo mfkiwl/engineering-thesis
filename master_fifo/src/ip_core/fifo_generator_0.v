@@ -47,7 +47,6 @@ module fifo_generator_0(
   full,
   empty,
   valid,
-  prog_full,
   prog_empty
 );
 
@@ -61,7 +60,6 @@ output [31 : 0] dout;
 output full;
 output empty;
 output valid;
-output prog_full;
 output prog_empty;
 
 // synthesis translate_off
@@ -191,15 +189,15 @@ output prog_empty;
     .C_PROG_EMPTY_TYPE_WACH(0),
     .C_PROG_EMPTY_TYPE_WDCH(0),
     .C_PROG_EMPTY_TYPE_WRCH(0),
-    .C_PROG_FULL_THRESH_ASSERT_VAL(8192),
+    .C_PROG_FULL_THRESH_ASSERT_VAL(16381),
     .C_PROG_FULL_THRESH_ASSERT_VAL_AXIS(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_RACH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_RDCH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_WACH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_WDCH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_WRCH(1023),
-    .C_PROG_FULL_THRESH_NEGATE_VAL(8191),
-    .C_PROG_FULL_TYPE(1),
+    .C_PROG_FULL_THRESH_NEGATE_VAL(16380),
+    .C_PROG_FULL_TYPE(0),
     .C_PROG_FULL_TYPE_AXIS(0),
     .C_PROG_FULL_TYPE_RACH(0),
     .C_PROG_FULL_TYPE_RDCH(0),
@@ -268,7 +266,6 @@ output prog_empty;
     .FULL(full),
     .EMPTY(empty),
     .VALID(valid),
-    .PROG_FULL(prog_full),
     .PROG_EMPTY(prog_empty),
     .BACKUP(),
     .BACKUP_MARKER(),
@@ -293,6 +290,7 @@ output prog_empty;
     .DATA_COUNT(),
     .RD_DATA_COUNT(),
     .WR_DATA_COUNT(),
+    .PROG_FULL(),
     .SBITERR(),
     .DBITERR(),
     .M_ACLK(),

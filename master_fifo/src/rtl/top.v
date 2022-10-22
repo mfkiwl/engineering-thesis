@@ -1,16 +1,17 @@
 module top (
 	// Input
-	input 	wire 			CLK_USER, //27MHz
-	input 	wire 			CLK_FTDI, //100MHz
-	input 	wire 			HRST_N,
-	input 	wire 			SRST_N,
-	input 	wire 			TXE_N,
+	input  wire 			CLK_USER, //27MHz
+	input  wire 			CLK_FTDI, //100MHz
+	input  wire 			HRST_N,
+	input  wire 			SRST_N,
+	input  wire 			TXE_N,
+	input	 wire				BUTTON,
 	// Output
-	inout 	wire [31:0] DATA,
-	inout 	wire [3:0] 	BE,
-	output 	wire 			WR_N,
-	output	wire			RD_N,
-	output	wire			OE_N
+	inout  wire [31:0] 	DATA,
+	inout  wire [3:0] 	BE,
+	output wire 			WR_N,
+	output wire				RD_N,
+	output wire				OE_N
 	);
 
 	// reset
@@ -27,7 +28,7 @@ module top (
 	data_generator u_data_generator(
 		.clk_in(CLK_USER),
 		.rst_in(rst),
-		.trigger_in(gate_trigger),
+		.trigger_in(BUTTON),
 		.data_out(gen_data),
 		.valid_out(gen_valid)
 	);
@@ -41,8 +42,7 @@ module top (
 		.txe_n_in(TXE_N),
 		.data_out(DATA),
 		.be_out(BE),
-		.wr_n_out(WR_N),
-		.trigger_out(gate_trigger)
+		.wr_n_out(WR_N)
 	);
 	
 	assign RD_N = 1'b1;

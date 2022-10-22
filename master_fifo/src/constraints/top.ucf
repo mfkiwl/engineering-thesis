@@ -48,7 +48,8 @@ NET "DATA[31]"         LOC = "R8"  |IOSTANDARD=LVCMOS25 |SLEW=FAST;
 # SYSTEM INTF 
 #=======================================
 NET "SRST_N"          LOC = "C8";  
-NET "HRST_N"          LOC = "P4";  
+NET "HRST_N"          LOC = "P4";
+NET "BUTTON"			 LOC = "F5";
 #=======================================
 # CLOCKS 
 #=======================================
