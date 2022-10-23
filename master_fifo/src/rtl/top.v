@@ -23,15 +23,15 @@ module top (
 	wire gen_valid;
 	
 	// clock_generator
-	wire clk_81MHz;
+	wire clk_80MHz;
 	
 	clock_generator_0 u_clock (
-		.CLK_IN1(CLK_USER),
-		.CLK_OUT1(clk_81MHz)
+		.clk_27MHz_in(CLK_USER),
+		.clk_80MHz_out(clk_80MHz)
 	);
 	
 	data_generator u_data_generator(
-		.clk_in(clk_81MHz),
+		.clk_in(clk_80MHz),
 		.rst_in(rst),
 		.trigger_in(BUTTON),
 		.data_out(gen_data),
@@ -40,7 +40,7 @@ module top (
 	
 	data_gateway u_data_gateway(
 		.rst_in(rst),
-		.wr_clk_in(clk_81MHz),
+		.wr_clk_in(clk_80MHz),
 		.data_in(gen_data),
 		.valid_in(gen_valid),
 		.rd_clk_in(CLK_FTDI),

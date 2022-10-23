@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 14.7
-# Date: Sat Oct 22 23:31:29 2022
+# Date: Sun Oct 23 16:29:08 2022
 #
 ##############################################################
 #
@@ -41,7 +41,7 @@ SELECT Clocking_Wizard xilinx.com:ip:clk_wiz:3.6
 # BEGIN Parameters
 CSET calc_done=DONE
 CSET clk_in_sel_port=CLK_IN_SEL
-CSET clk_out1_port=CLK_OUT1
+CSET clk_out1_port=clk_80MHz_out
 CSET clk_out1_use_fine_ps_gui=false
 CSET clk_out2_port=CLK_OUT2
 CSET clk_out2_use_fine_ps_gui=false
@@ -226,7 +226,7 @@ CSET power_down_port=POWER_DOWN
 CSET prim_in_freq=27.000
 CSET prim_in_jitter=0.010
 CSET prim_source=Single_ended_clock_capable_pin
-CSET primary_port=CLK_IN1
+CSET primary_port=clk_27MHz_in
 CSET primitive=MMCM
 CSET primtype_sel=PLL_BASE
 CSET psclk_port=PSCLK
@@ -266,4 +266,4 @@ CSET use_status=false
 MISC pkg_timestamp=2012-05-10T12:44:55Z
 # END Extra information
 GENERATE
-# CRC: ab70ac76
+# CRC: c5abb2a4
