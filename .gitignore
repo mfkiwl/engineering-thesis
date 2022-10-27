@@ -29,3 +29,8 @@ api_c/.vs/
 api_c/x64/
 api_c/ft601/x64/
 
+
+#### Python
+api_python/**
+!api_python/*.py
+
