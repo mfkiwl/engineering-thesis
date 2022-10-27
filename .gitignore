@@ -25,7 +25,7 @@ master_fifo/src/sim/**
 
 
 #### Visual Studio
-api/.vs/
-api/x64/
-api/ft601/x64/
+api_c/.vs/
+api_c/x64/
+api_c/ft601/x64/
 

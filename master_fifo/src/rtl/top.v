@@ -13,6 +13,11 @@ module top (
 	output wire				RD_N,
 	output wire				OE_N
 	);
+	
+	// In & Out ports
+	wire [31:0] data;
+	wire [3:0] be;
+	wire txe_n, wr_n;
 
 	// reset
 	wire rst;
@@ -24,6 +29,9 @@ module top (
 	
 	// clock_generator
 	wire clk_80MHz;
+	
+	// data_gateway
+	
 	
 	clock_generator_0 u_clock (
 		.clk_27MHz_in(CLK_USER),
@@ -44,12 +52,16 @@ module top (
 		.data_in(gen_data),
 		.valid_in(gen_valid),
 		.rd_clk_in(CLK_FTDI),
-		.txe_n_in(TXE_N),
-		.data_out(DATA),
-		.be_out(BE),
-		.wr_n_out(WR_N)
+		.txe_n_in(txe_n),
+		.data_out(data),
+		.be_out(be),
+		.wr_n_out(wr_n)
 	);
 	
+	assign txe_n = TXE_N;
+	assign DATA = data;
+	assign BE = be;
+	assign WR_N = wr_n;
 	assign RD_N = 1'b1;
 	assign OE_N = 1'b1;
 	
