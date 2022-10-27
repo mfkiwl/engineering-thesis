@@ -17,7 +17,7 @@ module top (
 	// In & Out ports
 	wire [31:0] data;
 	wire [3:0] be;
-	wire txe_n, wr_n;
+	wire clk_user, clk_ftdi, button, txe_n, wr_n;
 
 	// reset
 	wire rst;
@@ -30,18 +30,15 @@ module top (
 	// clock_generator
 	wire clk_80MHz;
 	
-	// data_gateway
-	
-	
 	clock_generator_0 u_clock (
-		.clk_27MHz_in(CLK_USER),
+		.clk_27MHz_in(clk_user),
 		.clk_80MHz_out(clk_80MHz)
 	);
 	
 	data_generator u_data_generator(
 		.clk_in(clk_80MHz),
 		.rst_in(rst),
-		.trigger_in(BUTTON),
+		.trigger_in(button),
 		.data_out(gen_data),
 		.valid_out(gen_valid)
 	);
@@ -51,13 +48,17 @@ module top (
 		.wr_clk_in(clk_80MHz),
 		.data_in(gen_data),
 		.valid_in(gen_valid),
-		.rd_clk_in(CLK_FTDI),
+		.rd_clk_in(clk_ftdi),
 		.txe_n_in(txe_n),
 		.data_out(data),
 		.be_out(be),
 		.wr_n_out(wr_n)
 	);
 	
+	// ports assignments
+	assign clk_user = CLK_USER;
+	assign clk_ftdi = CLK_FTDI;
+	assign button = BUTTON;
 	assign txe_n = TXE_N;
 	assign DATA = data;
 	assign BE = be;
