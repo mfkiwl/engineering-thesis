@@ -2,58 +2,61 @@ module data_gateway (
 	// Input
 	input  wire 			rst_in,
 	input  wire 			wr_clk_in,
-	input  wire [31:0] 	data_in,
-	input  wire 			valid_in,
 	input  wire 			rd_clk_in,
 	input  wire 			txe_n_in,
+	input  wire				rxf_n_in,
 	// Output
-	output wire [31:0]	data_out,
-	output wire [3:0]		be_out,
-	output wire				wr_n_out
+	output wire				wr_n_out,
+	output wire				rd_n_out,
+	output wire				oe_n_out,
+	// Inout
+	inout wire [31:0] 	data_io,
+	inout wire [31:0]		be_io
 	);
 	
-	localparam PACKET_SIZE = 1024;
+	wire fifo_prog_empty, fifo_prog_full;
+	wire [31:0] fifo_data, usb_data;
+	wire [3:0] fifo_be, usb_be;
+	wire fifo_read, fifo_write;
+	wire fifo_valid;
 	
-	// fifo
-	wire fifo_empty, fifo_valid, fifo_prog_empty;
+	assign fifo_be = 4'hf;
 	
-	reg fifo_read;
-	reg [1:0] fifo_reset_ctr;
-	reg [10:0] fifo_data_ctr;
-
-	assign be_out = 4'hf;
-	assign wr_n_out = !fifo_valid;
-	
-	always @(posedge rd_clk_in)
-		if(rst_in || fifo_empty) begin
-			fifo_data_ctr <= PACKET_SIZE;
-			fifo_reset_ctr <= 0;
-		end
-		else
-			if((!fifo_prog_empty) && (fifo_data_ctr == PACKET_SIZE) && (!txe_n_in)) begin
-				fifo_reset_ctr <= fifo_reset_ctr + 1'b1;
-				if(fifo_reset_ctr == 2)
-					fifo_data_ctr <= 0;
-			end
-			else if(fifo_data_ctr != PACKET_SIZE) begin
-					fifo_data_ctr <= fifo_data_ctr + 1'b1;
-					fifo_reset_ctr <= 0;
-			end
-	
-	always @(posedge rd_clk_in) fifo_read <= (fifo_data_ctr != PACKET_SIZE);
+	fifo_fsm u_fifo_fsm(
+		// Input
+		.clk_in(rd_clk_in),
+		.rst_in(rst_in),
+		.usb_txe_n_in(txe_n_in),
+		.usb_rxf_n_in(rxf_n_in),
+		.fifo_prog_empty_in(fifo_prog_empty),
+		.fifo_prog_full_in(fifo_prog_full),
+		.fifo_data_in(fifo_data),
+		.fifo_be_in(fifo_be),
+		// Output
+		.fifo_read_out(fifo_read),
+		.fifo_write_out(fifo_write),
+		.usb_wr_n_out(wr_n_out),
+		.usb_rd_n_out(rd_n_out),
+		.usb_oe_n_out(oe_n_out),
+		.usb_data_out(usb_data),
+		.usb_be_out(usb_be),
+		// Inout
+		.usb_data_io(data_io),
+		.usb_be_io(be_io)
+	);
 	
 	fifo_generator_0 u_fifo(
 		.rst(rst_in), 
 		.wr_clk(wr_clk_in), 
 		.rd_clk(rd_clk_in), 
-		.din(data_in),
-		.wr_en(valid_in), 
+		.din(usb_data),
+		.wr_en(fifo_write), 
 		.rd_en(fifo_read), 
-		.dout(data_out), 
+		.dout(fifo_data), 
 		.full(), 
-		.empty(fifo_empty), 
-		.valid(fifo_valid),
-		.prog_empty(fifo_prog_empty) 
+		.empty(), 
+		.prog_empty(fifo_prog_empty),
+		.prog_full(fifo_prog_full)
 	);
 
 endmodule

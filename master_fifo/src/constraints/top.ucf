@@ -5,6 +5,7 @@
 #=======================================
 NET "CLK_FTDI"              LOC = "R10" |IOSTANDARD=LVCMOS25 |SCHMITT_TRIGGER;
 NET "TXE_N"            LOC = "E8"  |IOSTANDARD=LVCMOS25;
+NET "RXF_N"            LOC = "E7"  |IOSTANDARD=LVCMOS25;
 NET "RD_N"             LOC = "C9"  |IOSTANDARD=LVCMOS25 |SLEW=FAST;
 NET "OE_N"             LOC = "D9"  |IOSTANDARD=LVCMOS25 |SLEW=FAST;
 NET "WR_N"             LOC = "F11" |IOSTANDARD=LVCMOS25 |SLEW=FAST; 
@@ -49,7 +50,6 @@ NET "DATA[31]"         LOC = "R8"  |IOSTANDARD=LVCMOS25 |SLEW=FAST;
 #=======================================
 NET "SRST_N"          LOC = "C8";  
 NET "HRST_N"          LOC = "P4";
-NET "BUTTON"			 LOC = "F5";
 #=======================================
 # CLOCKS 
 #=======================================

@@ -46,7 +46,7 @@ module fifo_generator_0(
   dout,
   full,
   empty,
-  valid,
+  prog_full,
   prog_empty
 );
 
@@ -59,7 +59,7 @@ input rd_en;
 output [31 : 0] dout;
 output full;
 output empty;
-output valid;
+output prog_full;
 output prog_empty;
 
 // synthesis translate_off
@@ -153,7 +153,7 @@ output prog_empty;
     .C_HAS_SLAVE_CE(0),
     .C_HAS_SRST(0),
     .C_HAS_UNDERFLOW(0),
-    .C_HAS_VALID(1),
+    .C_HAS_VALID(0),
     .C_HAS_WR_ACK(0),
     .C_HAS_WR_DATA_COUNT(0),
     .C_HAS_WR_RST(0),
@@ -189,15 +189,15 @@ output prog_empty;
     .C_PROG_EMPTY_TYPE_WACH(0),
     .C_PROG_EMPTY_TYPE_WDCH(0),
     .C_PROG_EMPTY_TYPE_WRCH(0),
-    .C_PROG_FULL_THRESH_ASSERT_VAL(16381),
+    .C_PROG_FULL_THRESH_ASSERT_VAL(15358),
     .C_PROG_FULL_THRESH_ASSERT_VAL_AXIS(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_RACH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_RDCH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_WACH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_WDCH(1023),
     .C_PROG_FULL_THRESH_ASSERT_VAL_WRCH(1023),
-    .C_PROG_FULL_THRESH_NEGATE_VAL(16380),
-    .C_PROG_FULL_TYPE(0),
+    .C_PROG_FULL_THRESH_NEGATE_VAL(15357),
+    .C_PROG_FULL_TYPE(1),
     .C_PROG_FULL_TYPE_AXIS(0),
     .C_PROG_FULL_TYPE_RACH(0),
     .C_PROG_FULL_TYPE_RDCH(0),
@@ -265,7 +265,7 @@ output prog_empty;
     .DOUT(dout),
     .FULL(full),
     .EMPTY(empty),
-    .VALID(valid),
+    .PROG_FULL(prog_full),
     .PROG_EMPTY(prog_empty),
     .BACKUP(),
     .BACKUP_MARKER(),
@@ -286,11 +286,11 @@ output prog_empty;
     .WR_ACK(),
     .OVERFLOW(),
     .ALMOST_EMPTY(),
+    .VALID(),
     .UNDERFLOW(),
     .DATA_COUNT(),
     .RD_DATA_COUNT(),
     .WR_DATA_COUNT(),
-    .PROG_FULL(),
     .SBITERR(),
     .DBITERR(),
     .M_ACLK(),
