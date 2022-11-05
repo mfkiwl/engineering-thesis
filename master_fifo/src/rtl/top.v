@@ -42,8 +42,8 @@ module top (
 		.wr_n_out(wr_n),
 		.rd_n_out(rd_n),
 		.oe_n_out(oe_n),
-		.data_io(data),
-		.be_io(be)
+		.data_io({DATA[3:0]}),
+		.be_io(BE)
 	);
 	
 	// ports assignments
@@ -51,8 +51,8 @@ module top (
 	assign clk_ftdi = CLK_FTDI;
 	assign txe_n = TXE_N;
 	assign rxf_n = RXF_N;
-	assign DATA = data;
-	assign BE = be;
+	//assign DATA = data;
+	//assign BE = be;
 	assign WR_N = wr_n;
 	assign RD_N = rd_n;
 	assign OE_N = oe_n;

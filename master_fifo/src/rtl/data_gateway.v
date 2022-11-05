@@ -37,7 +37,7 @@ module data_gateway (
 		.fifo_write_out(fifo_write),
 		.usb_wr_n_out(wr_n_out),
 		.usb_rd_n_out(rd_n_out),
-		.usb_oe_n_out(oe_n_out),
+		.usb_oe_n_out(oe_n_out), 
 		.usb_data_out(usb_data),
 		.usb_be_out(usb_be),
 		// Inout
@@ -47,7 +47,7 @@ module data_gateway (
 	
 	fifo_generator_0 u_fifo(
 		.rst(rst_in), 
-		.wr_clk(wr_clk_in), 
+		.wr_clk(wr_clk_in),  
 		.rd_clk(rd_clk_in), 
 		.din(usb_data),
 		.wr_en(fifo_write), 
