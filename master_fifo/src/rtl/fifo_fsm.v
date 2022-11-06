@@ -15,7 +15,7 @@ module fifo_fsm (
 	output wire					usb_rd_n_out,
 	output wire					usb_oe_n_out,
 	output wire [31:0]		usb_data_out,
-	output wire [31:0]		usb_be_out,
+	output wire [3:0]			usb_be_out,
 	// Inout
 	inout  wire [31:0]		usb_data_io,
 	inout  wire [3:0]       usb_be_io
@@ -44,17 +44,10 @@ module fifo_fsm (
 		else
 			case(state)
 				IDLE:
-					if((!fifo_prog_full_in) && (!usb_rxf_n_in)) begin
-						fsm_debounce_ctr <= fsm_debounce_ctr + 1'b1;
-						if(fsm_debounce_ctr == 2)
-							state <= MST_RD;
-						else
-							state <= IDLE;
-					end
-					else begin
+					if((!fifo_prog_full_in) && (!usb_rxf_n_in))
+						state <= MST_RD;
+					else
 						state <= MIDDLE;
-						fsm_debounce_ctr <= 0;
-					end
 				MST_RD:
 					if(fifo_data_ctr == PACKET_SIZE)
 						state <= MIDDLE;

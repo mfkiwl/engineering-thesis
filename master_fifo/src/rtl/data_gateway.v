@@ -11,7 +11,7 @@ module data_gateway (
 	output wire				oe_n_out,
 	// Inout
 	inout wire [31:0] 	data_io,
-	inout wire [31:0]		be_io
+	inout wire [3:0]		be_io
 	);
 	
 	wire fifo_prog_empty, fifo_prog_full;

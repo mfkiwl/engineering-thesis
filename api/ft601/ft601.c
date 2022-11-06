@@ -2,7 +2,7 @@
 #include <initguid.h>
 #include "FTD3XX.h"
 
-#define BUFFER_SIZE (8192*4)
+#define BUFFER_SIZE (1024*4)
 
 DEFINE_GUID(GUID_DEVINTERFACE_FOR_D3XX, 0xd1e8fe6a, 0xab75, 0x4d9e, 0x97, 0xd2, 0x6, 0xfa, 0x22, 0xc7, 0x73, 0x6c);
 

@@ -42,7 +42,7 @@ module top (
 		.wr_n_out(wr_n),
 		.rd_n_out(rd_n),
 		.oe_n_out(oe_n),
-		.data_io({DATA[3:0]}),
+		.data_io(DATA),
 		.be_io(BE)
 	);
 	
