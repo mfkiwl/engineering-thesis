@@ -46,6 +46,7 @@ module fifo_generator_0(
   dout,
   full,
   empty,
+  valid,
   prog_full,
   prog_empty
 );
@@ -59,6 +60,7 @@ input rd_en;
 output [31 : 0] dout;
 output full;
 output empty;
+output valid;
 output prog_full;
 output prog_empty;
 
@@ -153,7 +155,7 @@ output prog_empty;
     .C_HAS_SLAVE_CE(0),
     .C_HAS_SRST(0),
     .C_HAS_UNDERFLOW(0),
-    .C_HAS_VALID(0),
+    .C_HAS_VALID(1),
     .C_HAS_WR_ACK(0),
     .C_HAS_WR_DATA_COUNT(0),
     .C_HAS_WR_RST(0),
@@ -265,6 +267,7 @@ output prog_empty;
     .DOUT(dout),
     .FULL(full),
     .EMPTY(empty),
+    .VALID(valid),
     .PROG_FULL(prog_full),
     .PROG_EMPTY(prog_empty),
     .BACKUP(),
@@ -286,7 +289,6 @@ output prog_empty;
     .WR_ACK(),
     .OVERFLOW(),
     .ALMOST_EMPTY(),
-    .VALID(),
     .UNDERFLOW(),
     .DATA_COUNT(),
     .RD_DATA_COUNT(),
