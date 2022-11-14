@@ -29,9 +29,9 @@ int main() {
         ULONG ulBytesToWrite = sizeof(acWriteBuf);
 
         // Prepare data to sent
-        for (ULONG i = 0; i < BUFFER_SIZE; i=i+4)
-            acWriteBuf[i] = (i/4);
-        
+        for (ULONG i = 0; i < BUFFER_SIZE; i = i + 4)
+            acWriteBuf[i] = (i / 4);
+
         // Initialize Overlapped for asynchronous transfer
         OVERLAPPED vOverlappedWrite = { 0 };
         ftStatus = FT_InitializeOverlapped(ftHandle, &vOverlappedWrite);
