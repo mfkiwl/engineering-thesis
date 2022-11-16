@@ -12,7 +12,7 @@ int main() {
     GUID DeviceGUID[2] = { 0 };
 
     OVERLAPPED vOverlapped = { 0 };
-    UCHAR acReadBuf[BUFFER_SIZE] = { 0xFF };
+    UCHAR acReadBuf[BUFFER_SIZE] = {0xFF};
     ULONG ulBytesRead = 0;
     UCHAR ucPipeID = 0x82;
     ULONG ulTimeoutInMs = 10000;
@@ -53,14 +53,12 @@ int main() {
         for (ULONG ulByteIndex = 3; ulByteIndex < ulBytesRead; ulByteIndex = ulByteIndex + 4) {
             uiPrevData = uiData;
             uiData = ((acReadBuf[ulByteIndex] << 24) | (acReadBuf[ulByteIndex - 1] << 16) | (acReadBuf[ulByteIndex - 2] << 8) | (acReadBuf[ulByteIndex - 3] << 0));
-            if ((uiPrevData + 1 != uiData) && (uiData != 0)) {
-                printf("-------------------------\n");
+            if ((uiPrevData + 1 != uiData))
                 fails++;
-            }
             printf("%d\n", uiData);
         }
     }
-    printf("\n\nfails = %d\n\n", fails);
+    printf("\n\nfails = %d\n\n", fails-1);
 
     FT_Close(ftHandle);
     return TRUE;
