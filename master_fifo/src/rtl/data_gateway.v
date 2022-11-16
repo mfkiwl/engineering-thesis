@@ -39,9 +39,9 @@ module data_gateway(
 		.rd_en(tx_fifo_read), 
 		.dout(tx_fifo_data), 
 		.full(), 
-		.empty(tx_fifo_prog_empty),
+		.empty(),
 		.valid(tx_ready),
-		.prog_empty(),
+		.prog_empty(tx_fifo_prog_empty),
 		.prog_full()
 	);
 	
