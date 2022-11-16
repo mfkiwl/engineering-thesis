@@ -26,6 +26,10 @@ module ft245_controller(
 					MST_RD	=	4'b0010,
 					MIDDLE	=	4'b0100,
 					MST_WR	=	4'b1000;
+					
+	localparam PACKET_SIZE = 1024;
+	
+	reg [10:0] burst_data_ctr;
 	
 	reg [3:0] state;
 	reg usb_wr_reg, usb_rd_reg, usb_oe_reg;
@@ -45,7 +49,7 @@ module ft245_controller(
 				MIDDLE:
 					state <= (usb_txe && (!tx_fifo_prog_empty))? MST_WR: IDLE;
 				MST_WR:
-					state <= ((!usb_txe) || tx_fifo_prog_empty)? IDLE: MST_WR;
+					state <= (burst_data_ctr == PACKET_SIZE)? IDLE: MST_WR;
 			endcase
 	
 	// usb signals logic
@@ -78,6 +82,12 @@ module ft245_controller(
 			usb_oe_reg <= 0;
 			usb_wr_reg <= 1'b1;
 		end
+	
+	always @(posedge usb_clk)
+		if((state == IDLE) || (state == MIDDLE) || (rst))
+			burst_data_ctr <= 0;
+		else
+			burst_data_ctr <= burst_data_ctr + 1'b1;
 		
 	assign usb_data = (state == MST_WR)? tx_fifo_data: 32'bZ;
 	assign usb_be = (state == MST_WR)? 4'b1111: 4'bZ;
