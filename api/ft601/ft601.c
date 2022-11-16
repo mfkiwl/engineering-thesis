@@ -2,7 +2,7 @@
 #include <initguid.h>
 #include "FTD3XX.h"
 
-#define BUFFER_SIZE (4096) // amount of 1 means 4bytes
+#define BUFFER_SIZE (1000000)
 
 DEFINE_GUID(GUID_DEVINTERFACE_FOR_D3XX, 0xd1e8fe6a, 0xab75, 0x4d9e, 0x97, 0xd2, 0x6, 0xfa, 0x22, 0xc7, 0x73, 0x6c);
 
@@ -12,13 +12,13 @@ int main() {
     GUID DeviceGUID[2] = { 0 };
 
     OVERLAPPED vOverlapped = { 0 };
-    UCHAR acReadBuf[BUFFER_SIZE*4] = { 0xFF };
+    UCHAR acReadBuf[BUFFER_SIZE] = { 0xFF };
     ULONG ulBytesRead = 0;
     UCHAR ucPipeID = 0x82;
     ULONG ulTimeoutInMs = 10000;
     UINT32 uiData = 0;
-    UINT32 uiDataPrev = 0;
-    UINT32 uiFails = 0;
+    UINT32 uiPrevData = 0;
+    UINT32 fails = 0;
 
     memcpy(&DeviceGUID[0], &GUID_DEVINTERFACE_FOR_D3XX, sizeof(GUID));
     ftStatus = FT_Create(&DeviceGUID[0], FT_OPEN_BY_GUID, &ftHandle);
@@ -30,7 +30,7 @@ int main() {
     ftStatus = FT_SetPipeTimeout(ftHandle, ucPipeID, ulTimeoutInMs);
 
     // Wait for anykey press
-    //getch(); 
+    getch();
 
     // Read data from pipe
     ftStatus = FT_ReadPipe(ftHandle, ucPipeID, acReadBuf, sizeof(acReadBuf), &ulBytesRead, &vOverlapped);
@@ -51,16 +51,16 @@ int main() {
     }
     else {
         for (ULONG ulByteIndex = 3; ulByteIndex < ulBytesRead; ulByteIndex = ulByteIndex + 4) {
-            uiDataPrev = uiData;
+            uiPrevData = uiData;
             uiData = ((acReadBuf[ulByteIndex] << 24) | (acReadBuf[ulByteIndex - 1] << 16) | (acReadBuf[ulByteIndex - 2] << 8) | (acReadBuf[ulByteIndex - 3] << 0));
-            if ((uiDataPrev + 1 != uiData) && ( uiData!= 0)) {
-                printf("-----------------------\n");
-                uiFails++;
+            if ((uiPrevData + 1 != uiData) && (uiData != 0)) {
+                printf("-------------------------\n");
+                fails++;
             }
             printf("%d\n", uiData);
         }
     }
-    printf("\n\nfails = %d \n\n", uiFails);
+    printf("\n\nfails = %d\n\n", fails);
 
     FT_Close(ftHandle);
     return TRUE;

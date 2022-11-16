@@ -1,6 +1,0 @@
-verilog work "src/rtl/ft245_controller.v"
-verilog work "src/ip_core/fifo_generator_0.v"
-verilog work "src/rtl/data_generator.v"
-verilog work "src/rtl/data_gateway.v"
-verilog work "src/ip_core/clock_generator_0.v"
-verilog work "src/rtl/top.v"
