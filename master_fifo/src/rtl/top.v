@@ -11,8 +11,7 @@ module top (
 	inout  wire [3:0] 	BE,
 	output wire 			WR_N,
 	output wire				RD_N,
-	output wire				OE_N,
-	input wire BUTTON
+	output wire				OE_N
 	);
 
 	wire rst;
@@ -24,6 +23,8 @@ module top (
 	wire [31:0] gen_data;
 	wire gen_valid;
 	
+	wire full;
+	
 	clock_generator_0 u_clock (
 		.clk_27MHz_in(CLK_USER),
 		.clk_80MHz_out(clk_80MHz)
@@ -32,7 +33,7 @@ module top (
 	data_generator u_data_generator(
 		.clk_in(clk_80MHz),
 		.rst_in(rst),
-		.trigger_in(BUTTON),
+		.trigger_in((!full)),
 		.data_out(gen_data),
 		.valid_out(gen_valid)
 	);
@@ -54,7 +55,8 @@ module top (
 		.usb_rd(usb_rd),
 		.usb_oe(usb_oe),
 		.usb_data(DATA),
-		.usb_be(BE)
+		.usb_be(BE),
+		.full(full)
 	);
 	
 	assign WR_N = ~usb_wr;

@@ -22,10 +22,10 @@ module ft245_controller(
 	output wire				rx_fifo_write
 	);
 	
-	localparam	IDLE		=	4'b0001,
-					MST_RD	=	4'b0010,
-					MIDDLE	=	4'b0100,
-					MST_WR	=	4'b1000;
+	localparam	IDLE			=	4'b0001,
+					MST_READ		=	4'b0010,
+					MIDDLE		=	4'b0100,
+					MST_WRITE	=	4'b1000;
 					
 	localparam PACKET_SIZE = 1024;
 	
@@ -43,55 +43,45 @@ module ft245_controller(
 		else
 			case(state)
 				IDLE:
-					state <= (usb_rxf && (!rx_fifo_prog_full))? MST_RD: MIDDLE;
-				MST_RD:
-					state <= ((!usb_rxf) || rx_fifo_prog_full)? MIDDLE: MST_RD;
+					state <= (usb_rxf && (!rx_fifo_prog_full))? MST_READ: MIDDLE;
+				MST_READ:
+					state <= ((!usb_rxf) || rx_fifo_prog_full)? MIDDLE: MST_READ;
 				MIDDLE:
-					state <= (usb_txe && (!tx_fifo_prog_empty))? MST_WR: IDLE;
-				MST_WR:
-					state <= (burst_data_ctr == PACKET_SIZE)? IDLE: MST_WR;
+					state <= (usb_txe && (!tx_fifo_prog_empty))? MST_WRITE: IDLE;
+				MST_WRITE:
+					state <= (burst_data_ctr == PACKET_SIZE)? IDLE: MST_WRITE;
 			endcase
 	
 	// usb signals logic
 	always @(posedge usb_clk)
-		if((state == IDLE) || (rst)) begin
-			rx_fifo_write_reg <= 0;
-			tx_fifo_read_reg <= 0;
-			usb_rd_reg <= 0;
-			usb_oe_reg <= 0;
-			usb_wr_reg <= 0;
-		end
-		else if(state == MST_RD) begin
+		if(state == MST_READ) begin
 			rx_fifo_write_reg <= usb_oe;
 			tx_fifo_read_reg <= 0;
 			usb_rd_reg <= usb_oe;
 			usb_oe_reg <= 1'b1;
 			usb_wr_reg <= 0;
+			burst_data_ctr <= 0;
 		end
-		else if(state == MIDDLE) begin
+		else if(state == MST_WRITE) begin
+			rx_fifo_write_reg <= 0;
+			tx_fifo_read_reg <= (burst_data_ctr != PACKET_SIZE);
+			usb_rd_reg <= 0;
+			usb_oe_reg <= 0;
+			usb_wr_reg <= tx_fifo_read_reg;
+			burst_data_ctr <= (burst_data_ctr != PACKET_SIZE)? burst_data_ctr + 1'b1: burst_data_ctr;
+		end
+		else begin
 			rx_fifo_write_reg <= 0;
 			tx_fifo_read_reg <= 0;
 			usb_rd_reg <= 0;
 			usb_oe_reg <= 0;
 			usb_wr_reg <= 0;
-		end
-		else if(state == MST_WR) begin
-			rx_fifo_write_reg <= 0;
-			tx_fifo_read_reg <= 1'b1;
-			usb_rd_reg <= 0;
-			usb_oe_reg <= 0;
-			usb_wr_reg <= 1'b1;
-		end
-	
-	always @(posedge usb_clk)
-		if((state == IDLE) || (state == MIDDLE) || (rst))
 			burst_data_ctr <= 0;
-		else
-			burst_data_ctr <= burst_data_ctr + 1'b1;
+		end
 		
-	assign usb_data = (state == MST_WR)? tx_fifo_data: 32'bZ;
-	assign usb_be = (state == MST_WR)? 4'b1111: 4'bZ;
-	assign rx_fifo_data = (state == MST_RD)? usb_data: 32'bZ;
+	assign usb_data = (state == MST_WRITE)? tx_fifo_data: 32'bZ;
+	assign usb_be = (state == MST_WRITE)? 4'b1111: 4'bZ;
+	assign rx_fifo_data = (state == MST_READ)? usb_data: 32'bZ;
 	
 	assign usb_wr = usb_wr_reg;
 	assign usb_rd = usb_rd_reg;

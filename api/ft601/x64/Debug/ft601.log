@@ -1,4 +1,3 @@
 ﻿  ft601.c
 C:\Users\danie\Desktop\praca_inzynierska\workdir\4\ft245-fifo-usb3.0-converter\api\Dependencies\include\FTD3XX.h(157,2): warning C4091: 'typedef ': ignored on left of '_FT_STATUS' when no variable is declared
-C:\Users\danie\Desktop\praca_inzynierska\workdir\4\ft245-fifo-usb3.0-converter\api\ft601\ft601.c(31,5): warning C4013: 'getch' undefined; assuming extern returning int
   ft601.vcxproj -> C:\Users\danie\Desktop\praca_inzynierska\workdir\4\ft245-fifo-usb3.0-converter\api\x64\Debug\ft601.exe

@@ -57,4 +57,3 @@ NET "CLK_USER"			 LOC = "V10";
 NET "CLK_FTDI" TNM_NET = "CLK_FTDI"; 
 TIMESPEC "TS_CLK" = PERIOD "CLK_FTDI" 10 ns HIGH 50.00% INPUT_JITTER 800 ps PRIORITY 1;  
 # End of generated constraints
-NET "BUTTON"			 LOC = "F5";
