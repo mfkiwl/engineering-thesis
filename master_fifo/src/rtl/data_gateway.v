@@ -21,8 +21,7 @@ module data_gateway(
 	output wire				usb_rd,
 	output wire				usb_oe,
 	inout  wire [31:0]	usb_data,
-	inout  wire	[3:0]		usb_be,
-	output wire full
+	inout  wire	[3:0]		usb_be
 	);
 	
 	wire rx_fifo_read, tx_fifo_prog_empty;
@@ -43,9 +42,9 @@ module data_gateway(
 		.empty(),
 		.valid(tx_ready),
 		.prog_empty(tx_fifo_prog_empty),
-		.prog_full(full)
+		.prog_full()
 	);
-	/*
+	
 	fifo_generator_0	u_fifo_rx(
 		.rst(rst), 
 		.wr_clk(usb_clk),  
@@ -59,7 +58,7 @@ module data_gateway(
 		.valid(rx_valid),
 		.prog_empty(),
 		.prog_full(rx_fifo_prog_full)
-	);	*/
+	);
 	
 	ft245_controller u_ft245_controller(
 		.rst(rst),
