@@ -6,6 +6,24 @@
 
 DEFINE_GUID(GUID_DEVINTERFACE_FOR_D3XX, 0xd1e8fe6a, 0xab75, 0x4d9e, 0x97, 0xd2, 0x6, 0xfa, 0x22, 0xc7, 0x73, 0x6c);
 
+/*=============================================================================================================================*/
+/*
+* FUNCTION: Loopback_test
+* =============================================================================================================================
+* RETURN VALUE:
+* BOOL - TRUE if passed, FALSE if failed
+* 
+* PARAMETERS:
+* void
+* 
+* -----------------------------------------------------------------------------------------------------------------------------
+* ABSTRACT:
+* -----------------------------------------------------------------------------------------------------------------------------
+* Function is sending incremented data to device then reads data received from device
+* and compares sent data with received
+* the operation is repeated 10 times(in every cycle 4096 Bytes is sent)
+*/
+/*=============================================================================================================================*/
 BOOL Loopback_test(void) {
     FT_STATUS ftStatus = FT_OK;
     FT_HANDLE ftHandle;
