@@ -22,14 +22,14 @@ module top (
 	wire [31:0] data;
 	wire valid;
 	
-	data_gateway u_data_gateway(
+	ft245_controller u_ft245_controller(
 		.rst(rst),
 		.tx_clk(CLK_FTDI),
-		.tx_valid(valid), //in
+		.tx_write(valid), //in
 		.tx_data(data), //in
-		.tx_ready(), //out
+		.tx_valid(), //out
 		.rx_clk(CLK_FTDI), 
-		.rx_ready(1'b1), //in
+		.rx_read(1'b1), //in
 		.rx_valid(valid), //out
 		.rx_data(data), //out
 		.usb_clk(CLK_FTDI),

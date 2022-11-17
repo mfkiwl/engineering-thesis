@@ -1,5 +1,17 @@
 module ft245_controller(
-	input wire		rst,
+	input wire				rst,
+	
+	// master tx interface
+	input  wire				tx_clk,
+	input  wire				tx_write,
+	input  wire [31:0]	tx_data,
+	output wire				tx_valid,
+	
+	// master rx interface
+	input  wire				rx_clk,
+	input  wire				rx_read,
+	output wire				rx_valid,
+	output wire [31:0]	rx_data,
 	
 	// usb interface
 	input  wire				usb_clk,
@@ -8,85 +20,62 @@ module ft245_controller(
 	output wire				usb_wr,
 	output wire				usb_rd,
 	output wire				usb_oe,
-	inout	 wire [31:0]	usb_data,
-	inout  wire [3:0]		usb_be,
-	
-	// master tx interface
-	input  wire				tx_fifo_prog_empty,
-	input	 wire [31:0]	tx_fifo_data,
-	output wire				tx_fifo_read,
-	
-	// master rx interface
-	input  wire				rx_fifo_prog_full,
-	output wire [31:0]	rx_fifo_data,
-	output wire				rx_fifo_write
+	inout  wire [31:0]	usb_data,
+	inout  wire	[3:0]		usb_be
 	);
 	
-	localparam	IDLE			=	4'b0001,
-					MST_READ		=	4'b0010,
-					MIDDLE		=	4'b0100,
-					MST_WRITE	=	4'b1000;
-					
-	localparam PACKET_SIZE = 1024;
+	wire rx_fifo_read, tx_fifo_prog_empty;
+	wire [31:0] tx_fifo_data;
 	
-	reg [10:0] burst_data_ctr;
+	wire rx_fifo_write, rx_fifo_prog_full;
+	wire [31:0] rx_fifo_data;
 	
-	reg [3:0] state;
-	reg usb_wr_reg, usb_rd_reg, usb_oe_reg;
-	reg tx_fifo_read_reg;
-	reg rx_fifo_write_reg;
+	fifo_generator_0	u_fifo_tx(
+		.rst(rst), 
+		.wr_clk(tx_clk),  
+		.rd_clk(usb_clk), 
+		.din(tx_data),
+		.wr_en(tx_write), 
+		.rd_en(tx_fifo_read), 
+		.dout(tx_fifo_data), 
+		.full(), 
+		.empty(),
+		.valid(tx_valid),
+		.prog_empty(tx_fifo_prog_empty),
+		.prog_full()
+	);
 	
-	// state machine
-	always @(posedge usb_clk)
-		if(rst)
-			state <= IDLE;
-		else
-			case(state)
-				IDLE:
-					state <= (usb_rxf && (!rx_fifo_prog_full))? MST_READ: MIDDLE;
-				MST_READ:
-					state <= ((!usb_rxf) || rx_fifo_prog_full)? MIDDLE: MST_READ;
-				MIDDLE:
-					state <= (usb_txe && (!tx_fifo_prog_empty))? MST_WRITE: IDLE;
-				MST_WRITE:
-					state <= (burst_data_ctr == PACKET_SIZE)? IDLE: MST_WRITE;
-			endcase
+	fifo_generator_0	u_fifo_rx(
+		.rst(rst), 
+		.wr_clk(usb_clk),  
+		.rd_clk(rx_clk),
+		.din(rx_fifo_data), 
+		.wr_en(rx_fifo_write),  
+		.rd_en(rx_read), 
+		.dout(rx_data), 
+		.full(), 
+		.empty(),
+		.valid(rx_valid),
+		.prog_empty(),
+		.prog_full(rx_fifo_prog_full)
+	);
 	
-	// usb signals logic
-	always @(posedge usb_clk)
-		if(state == MST_READ) begin
-			rx_fifo_write_reg <= usb_oe;
-			tx_fifo_read_reg <= 0;
-			usb_rd_reg <= usb_oe;
-			usb_oe_reg <= 1'b1;
-			usb_wr_reg <= 0;
-			burst_data_ctr <= 0;
-		end
-		else if(state == MST_WRITE) begin
-			rx_fifo_write_reg <= 0;
-			tx_fifo_read_reg <= (burst_data_ctr != PACKET_SIZE);
-			usb_rd_reg <= 0;
-			usb_oe_reg <= 0;
-			usb_wr_reg <= tx_fifo_read_reg;
-			burst_data_ctr <= (burst_data_ctr != PACKET_SIZE)? burst_data_ctr + 1'b1: burst_data_ctr;
-		end
-		else begin
-			rx_fifo_write_reg <= 0;
-			tx_fifo_read_reg <= 0;
-			usb_rd_reg <= 0;
-			usb_oe_reg <= 0;
-			usb_wr_reg <= 0;
-			burst_data_ctr <= 0;
-		end
-		
-	assign usb_data = (state == MST_WRITE)? tx_fifo_data: 32'bZ;
-	assign usb_be = (state == MST_WRITE)? 4'b1111: 4'bZ;
-	assign rx_fifo_data = (state == MST_READ)? usb_data: 32'bZ;
-	
-	assign usb_wr = usb_wr_reg;
-	assign usb_rd = usb_rd_reg;
-	assign usb_oe = usb_oe_reg;
-	assign tx_fifo_read = tx_fifo_read_reg;
-	assign rx_fifo_write = rx_fifo_write_reg;
-	
+	data_gateway u_data_gateway(
+		.rst(rst),
+		.usb_clk(usb_clk),
+		.usb_rxf(usb_rxf),
+		.usb_txe(usb_txe),
+		.usb_wr(usb_wr),
+		.usb_rd(usb_rd),
+		.usb_oe(usb_oe),
+		.usb_data(usb_data),
+		.usb_be(usb_be),
+		.tx_fifo_prog_empty(tx_fifo_prog_empty),
+		.tx_fifo_data(tx_fifo_data),
+		.tx_fifo_read(tx_fifo_read),
+		.rx_fifo_prog_full(rx_fifo_prog_full),
+		.rx_fifo_data(rx_fifo_data),
+		.rx_fifo_write(rx_fifo_write)
+	);
+
 endmodule
