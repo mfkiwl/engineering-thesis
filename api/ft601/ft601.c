@@ -30,7 +30,7 @@ int main() {
 
         // Prepare data to sent
         for (ULONG i = 0; i < BUFFER_SIZE/4; i = i++)
-            acWriteBuf[i] = i;
+            acWriteBuf[i] = i + (uiLoopCtr * (BUFFER_SIZE/4));
 
         // Initialize Overlapped for asynchronous transfer
         OVERLAPPED vOverlappedWrite = { 0 };
