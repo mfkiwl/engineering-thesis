@@ -9,7 +9,7 @@ module top_loopback (
 	// Output
 	inout  wire [31:0] 	DATA,
 	inout  wire [3:0] 	BE,
-	output wire 			WR_N,
+	output wire 			WR_N, 
 	output wire				RD_N,
 	output wire				OE_N
 	);
