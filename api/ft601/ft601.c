@@ -211,6 +211,6 @@ BOOL Loopback_test(void) {
 }
 
 int main() {
-    //if (Transmission_test() == TRUE) printf("PASSED"); else printf("FAILED");
-    //if (Loopback_test() == TRUE) printf("PASSED"); else printf("FAILED");
+    //if (Transmission_test() == TRUE) printf("Transmission_test: PASSED"); else printf("Transmission_test: FAILED");
+    //if (Loopback_test() == TRUE) printf("Loopback_test: PASSED"); else printf("Loopback_test: FAILED");
 }
