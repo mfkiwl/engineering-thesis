@@ -1,4 +1,4 @@
-module ft245_controller(
+module core_ft245(
 	input wire				rst,
 	
 	// master tx interface

@@ -22,7 +22,7 @@ module top (
 	wire [31:0] data;
 	wire valid;
 	
-	ft245_controller u_ft245_controller(
+	core_ft245 u_core_ft245(
 		.rst(rst),
 		.tx_clk(CLK_FTDI),
 		.tx_write(valid), //in
