@@ -48,7 +48,6 @@ int main() {
                     continue;
                 }
                 else if (FT_FAILED(ftStatus)) {
-                    printf("failed write");
                     ftStatus = FT_ReleaseOverlapped(ftHandle, &vOverlappedWrite);
                     FT_Close(ftHandle);
                     return FALSE;
@@ -85,7 +84,6 @@ int main() {
                     continue;
                 }
                 else if (FT_FAILED(ftStatus)) {
-                    printf("failed read");
                     ftStatus = FT_ReleaseOverlapped(ftHandle, &vOverlappedRead);
                     FT_Close(ftHandle);
                     return FALSE;
