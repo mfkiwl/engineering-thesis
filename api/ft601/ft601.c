@@ -6,13 +6,16 @@
 
 DEFINE_GUID(GUID_DEVINTERFACE_FOR_D3XX, 0xd1e8fe6a, 0xab75, 0x4d9e, 0x97, 0xd2, 0x6, 0xfa, 0x22, 0xc7, 0x73, 0x6c);
 
-int main() {
+BOOL Loopback_test(void) {
     FT_STATUS ftStatus = FT_OK;
     FT_HANDLE ftHandle;
     GUID DeviceGUID[2] = { 0 };
 
     UCHAR ucWritePipeId = 0x02;
     UCHAR ucReadPipeId = 0x82;
+
+    UINT32 uiPrevData = 0;
+    UINT32 uiData = 0;
 
     // Open device by GUID
     memcpy(&DeviceGUID[0], &GUID_DEVINTERFACE_FOR_D3XX, sizeof(GUID));
@@ -24,13 +27,13 @@ int main() {
         //
         // Write to channel 1 ep 0x02
         //
-        UINT32 acWriteBuf[BUFFER_SIZE/4] = { 0xFF };
+        UINT32 acWriteBuf[BUFFER_SIZE / 4] = { 0xFF };
         ULONG ulBytesWritten = 0;
         ULONG ulBytesToWrite = sizeof(acWriteBuf);
 
         // Prepare data to sent
-        for (ULONG i = 0; i < BUFFER_SIZE/4; i = i++)
-            acWriteBuf[i] = i + (uiLoopCtr * (BUFFER_SIZE/4));
+        for (ULONG i = 0; i < BUFFER_SIZE / 4; i = i++)
+            acWriteBuf[i] = i + (uiLoopCtr * (BUFFER_SIZE / 4));
 
         // Initialize Overlapped for asynchronous transfer
         OVERLAPPED vOverlappedWrite = { 0 };
@@ -97,15 +100,23 @@ int main() {
         // Release Overlapped
         ftStatus = FT_ReleaseOverlapped(ftHandle, &vOverlappedWrite);
 
-        // TODO: Check if results are correct
-        UINT32 uiData = 0;
+        // Check if results are correct
         for (ULONG ulByteIndex = 3; ulByteIndex < ulBytesRead; ulByteIndex = ulByteIndex + 4) {
+            uiPrevData = uiData;
             uiData = ((acReadBuf[ulByteIndex] << 24) | (acReadBuf[ulByteIndex - 1] << 16) | (acReadBuf[ulByteIndex - 2] << 8) | (acReadBuf[ulByteIndex - 3] << 0));
-            printf("%d\n", uiData);
+            if (((uiPrevData + 1) != uiData) && (uiData != 0)) {
+                ftStatus = FT_ReleaseOverlapped(ftHandle, &vOverlappedRead);
+                FT_Close(ftHandle);
+                return FALSE;
+            }
         }
     }
 
     // Close device
     FT_Close(ftHandle);
     return TRUE;
+}
+
+int main() {
+    if (Loopback_test() == TRUE) printf("PASSED"); else printf("FAILED");
 }
