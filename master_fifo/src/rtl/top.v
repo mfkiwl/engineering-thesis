@@ -1,4 +1,4 @@
-module top (
+module top_loopback (
 	// Input
 	input  wire 			CLK_USER, //27MHz
 	input  wire 			CLK_FTDI, //100MHz
@@ -19,19 +19,28 @@ module top (
 	
 	wire usb_wr, usb_rd, usb_oe;
 	
-	wire [31:0] data;
-	wire valid;
+	wire [31:0] tx_data, rx_data;
+	wire tx_write, rx_read;
+	wire rx_valid;
+	
+	loopback_test u_loopback_test(
+		.tx_write(tx_write),
+		.tx_data(tx_data),
+		.rx_read(rx_read),
+		.rx_valid(rx_valid),
+		.rx_data(rx_data)
+	);
 	
 	core_ft245 u_core_ft245(
 		.rst(rst),
 		.tx_clk(CLK_FTDI),
-		.tx_write(valid), //in
-		.tx_data(data), //in
+		.tx_write(tx_write), //in
+		.tx_data(tx_data), //in
 		.tx_valid(), //out
 		.rx_clk(CLK_FTDI), 
-		.rx_read(1'b1), //in
-		.rx_valid(valid), //out
-		.rx_data(data), //out
+		.rx_read(rx_read), //in
+		.rx_valid(rx_valid), //out
+		.rx_data(rx_data), //out
 		.usb_clk(CLK_FTDI),
 		.usb_rxf(!RXF_N),
 		.usb_txe(!TXE_N),
