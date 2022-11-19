@@ -18,7 +18,7 @@ module top_transmission (
 	wire rst;
 	assign rst = (HRST_N & SRST_N);
 	
-	wire clk_80MHz;
+	wire clk_gen;
 	
 	wire usb_wr, usb_rd, usb_oe;
 	
@@ -26,12 +26,12 @@ module top_transmission (
 	wire tx_write;
 	
 	clock_generator_0 u_clock (
-		.clk_27MHz_in(CLK_USER),
-		.clk_80MHz_out(clk_80MHz)
+		.clk_27MHz(CLK_USER),
+		.clk_gen(clk_gen)
 	);
 	
 	transmission_test u_transmission_test(
-		.clk_in(clk_80MHz),
+		.clk_in(clk_gen),
 		.rst_in(rst),
 		.trigger(BTN),
 		.tx_data(tx_data),
@@ -40,7 +40,7 @@ module top_transmission (
 	
 	core_ft245 u_core_ft245(
 		.rst(rst),
-		.tx_clk(clk_80MHz),
+		.tx_clk(clk_gen),
 		.tx_write(tx_write), //in
 		.tx_data(tx_data), //in
 		.tx_valid(), //out

@@ -58,19 +58,19 @@ BOOL Transmission_test(void) {
 
     // Handle errors & data
     if (ftStatus == FT_TIMEOUT) {
-        printf("Timeout has occured!");
+        FT_Close(ftHandle);
         return FALSE;
     }
     else if (ftStatus != FT_OK) {
-        printf("Failed due to other errors!");
+        FT_Close(ftHandle);
         return FALSE;
     }
     else {
         for (ULONG ulByteIndex = 3; ulByteIndex < ulBytesRead; ulByteIndex = ulByteIndex + 4) {
             uiPrevData = uiData;
             uiData = ((acReadBuf[ulByteIndex] << 24) | (acReadBuf[ulByteIndex - 1] << 16) | (acReadBuf[ulByteIndex - 2] << 8) | (acReadBuf[ulByteIndex - 3] << 0));
+            printf("%d\n", uiData);
             if (((uiPrevData + 1) != uiData) && (ulByteIndex != 3)) {
-                ftStatus = FT_ReleaseOverlapped(ftHandle, &vOverlapped);
                 FT_Close(ftHandle);
                 return FALSE;
             }
@@ -197,8 +197,8 @@ BOOL Loopback_test(void) {
         for (ULONG ulByteIndex = 3; ulByteIndex < ulBytesRead; ulByteIndex = ulByteIndex + 4) {
             uiPrevData = uiData;
             uiData = ((acReadBuf[ulByteIndex] << 24) | (acReadBuf[ulByteIndex - 1] << 16) | (acReadBuf[ulByteIndex - 2] << 8) | (acReadBuf[ulByteIndex - 3] << 0));
+            printf("%d\n", uiData);
             if (((uiPrevData + 1) != uiData) && (uiData != 0)) {
-                ftStatus = FT_ReleaseOverlapped(ftHandle, &vOverlappedRead);
                 FT_Close(ftHandle);
                 return FALSE;
             }
@@ -212,5 +212,5 @@ BOOL Loopback_test(void) {
 
 int main() {
     //if (Transmission_test() == TRUE) printf("Transmission_test: PASSED"); else printf("Transmission_test: FAILED");
-    //if (Loopback_test() == TRUE) printf("Loopback_test: PASSED"); else printf("Loopback_test: FAILED");
+    if (Loopback_test() == TRUE) printf("Loopback_test: PASSED"); else printf("Loopback_test: FAILED");
 }

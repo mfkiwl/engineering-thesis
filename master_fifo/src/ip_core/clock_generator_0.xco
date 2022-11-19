@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 14.7
-# Date: Sun Oct 23 16:29:08 2022
+# Date: Sat Nov 19 22:30:09 2022
 #
 ##############################################################
 #
@@ -41,7 +41,7 @@ SELECT Clocking_Wizard xilinx.com:ip:clk_wiz:3.6
 # BEGIN Parameters
 CSET calc_done=DONE
 CSET clk_in_sel_port=CLK_IN_SEL
-CSET clk_out1_port=clk_80MHz_out
+CSET clk_out1_port=clk_gen
 CSET clk_out1_use_fine_ps_gui=false
 CSET clk_out2_port=CLK_OUT2
 CSET clk_out2_use_fine_ps_gui=false
@@ -70,7 +70,7 @@ CSET clkin2_jitter_ps=100.0
 CSET clkin2_ui_jitter=0.010
 CSET clkout1_drives=BUFG
 CSET clkout1_requested_duty_cycle=50.000
-CSET clkout1_requested_out_freq=80.000
+CSET clkout1_requested_out_freq=100
 CSET clkout1_requested_phase=0.000
 CSET clkout2_drives=BUFG
 CSET clkout2_requested_duty_cycle=50.000
@@ -115,7 +115,7 @@ CSET dcm_clk_out5_port=CLK0
 CSET dcm_clk_out6_port=CLK0
 CSET dcm_clkdv_divide=2.0
 CSET dcm_clkfx_divide=27
-CSET dcm_clkfx_multiply=8
+CSET dcm_clkfx_multiply=10
 CSET dcm_clkgen_clk_out1_port=CLKFX
 CSET dcm_clkgen_clk_out2_port=CLKFX
 CSET dcm_clkgen_clk_out3_port=CLKFX
@@ -197,10 +197,10 @@ CSET override_pll=false
 CSET platform=nt64
 CSET pll_bandwidth=OPTIMIZED
 CSET pll_clk_feedback=CLKFBOUT
-CSET pll_clkfbout_mult=15
+CSET pll_clkfbout_mult=37
 CSET pll_clkfbout_phase=0.000
 CSET pll_clkin_period=37.037
-CSET pll_clkout0_divide=5
+CSET pll_clkout0_divide=10
 CSET pll_clkout0_duty_cycle=0.500
 CSET pll_clkout0_phase=0.000
 CSET pll_clkout1_divide=1
@@ -226,7 +226,7 @@ CSET power_down_port=POWER_DOWN
 CSET prim_in_freq=27.000
 CSET prim_in_jitter=0.010
 CSET prim_source=Single_ended_clock_capable_pin
-CSET primary_port=clk_27MHz_in
+CSET primary_port=clk_27MHz
 CSET primitive=MMCM
 CSET primtype_sel=PLL_BASE
 CSET psclk_port=PSCLK
@@ -266,4 +266,4 @@ CSET use_status=false
 MISC pkg_timestamp=2012-05-10T12:44:55Z
 # END Extra information
 GENERATE
-# CRC: c5abb2a4
+# CRC: 3955ae8e

@@ -55,7 +55,7 @@
 // "Output    Output      Phase     Duty      Pk-to-Pk        Phase"
 // "Clock    Freq (MHz) (degrees) Cycle (%) Jitter (ps)  Error (ps)"
 //----------------------------------------------------------------------------
-// CLK_OUT1____81.000______0.000______50.0______326.625____277.335
+// CLK_OUT1____99.900______0.000______50.0______214.456____233.502
 //
 //----------------------------------------------------------------------------
 // "Input Clock   Freq (MHz)    Input Jitter (UI)"
@@ -67,16 +67,16 @@
 (* CORE_GENERATION_INFO = "clock_generator_0,clk_wiz_v3_6,{component_name=clock_generator_0,use_phase_alignment=true,use_min_o_jitter=false,use_max_i_jitter=false,use_dyn_phase_shift=false,use_inclk_switchover=false,use_dyn_reconfig=false,feedback_source=FDBK_AUTO,primtype_sel=PLL_BASE,num_out_clk=1,clkin1_period=37.037,clkin2_period=37.037,use_power_down=false,use_reset=false,use_locked=false,use_inclk_stopped=false,use_status=false,use_freeze=false,use_clk_valid=false,feedback_type=SINGLE,clock_mgr_type=AUTO,manual_override=false}" *)
 module clock_generator_0
  (// Clock in ports
-  input         clk_27MHz_in,
+  input         clk_27MHz,
   // Clock out ports
-  output        clk_80MHz_out
+  output        clk_gen
  );
 
   // Input buffering
   //------------------------------------
   IBUFG clkin1_buf
    (.O (clkin1),
-    .I (clk_27MHz_in));
+    .I (clk_27MHz));
 
 
   // Clocking primitive
@@ -100,9 +100,9 @@ module clock_generator_0
     .CLK_FEEDBACK           ("CLKFBOUT"),
     .COMPENSATION           ("SYSTEM_SYNCHRONOUS"),
     .DIVCLK_DIVIDE          (1),
-    .CLKFBOUT_MULT          (15),
+    .CLKFBOUT_MULT          (37),
     .CLKFBOUT_PHASE         (0.000),
-    .CLKOUT0_DIVIDE         (5),
+    .CLKOUT0_DIVIDE         (10),
     .CLKOUT0_PHASE          (0.000),
     .CLKOUT0_DUTY_CYCLE     (0.500),
     .CLKIN_PERIOD           (37.037),
@@ -130,7 +130,7 @@ module clock_generator_0
     .I (clkfbout));
 
   BUFG clkout1_buf
-   (.O   (clk_80MHz_out),
+   (.O   (clk_gen),
     .I   (clkout0));
 
 

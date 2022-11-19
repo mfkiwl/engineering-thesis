@@ -17,11 +17,18 @@ module top_loopback (
 	wire rst;
 	assign rst = (HRST_N & SRST_N);
 	
+	wire clk_gen;
+	
 	wire usb_wr, usb_rd, usb_oe;
 	
 	wire [31:0] tx_data, rx_data;
 	wire tx_write, rx_read;
 	wire rx_valid;
+	
+	clock_generator_0 u_clock (
+		.clk_27MHz(CLK_USER),
+		.clk_gen(clk_gen)
+	);
 	
 	loopback_test u_loopback_test(
 		.tx_write(tx_write),
@@ -33,11 +40,11 @@ module top_loopback (
 	
 	core_ft245 u_core_ft245(
 		.rst(rst),
-		.tx_clk(CLK_FTDI),
+		.tx_clk(clk_gen),
 		.tx_write(tx_write), //in
 		.tx_data(tx_data), //in
 		.tx_valid(), //out
-		.rx_clk(CLK_FTDI), 
+		.rx_clk(clk_gen), 
 		.rx_read(rx_read), //in
 		.rx_valid(rx_valid), //out
 		.rx_data(rx_data), //out
