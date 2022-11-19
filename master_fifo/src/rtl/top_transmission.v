@@ -30,7 +30,7 @@ module top_transmission (
 		.clk_gen(clk_gen)
 	);
 	
-	transmission_test u_transmission_test(
+	data_generator u_data_generator(
 		.clk_in(clk_gen),
 		.rst_in(rst),
 		.trigger(BTN),
